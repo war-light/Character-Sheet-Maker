@@ -28,8 +28,9 @@ export const Canvas = () => {
 
       {/* Sheet */}
       <div
+        id="rpg-sheet-canvas"
         className={cn(
-          "bg-white w-[800px] min-h-[1100px] h-fit shadow-2xl relative transition-all rounded-xl",
+          "bg-white w-[800px] min-w-[800px] min-h-[1100px] h-fit shadow-2xl relative transition-all rounded-xl",
           showGrid ? "bg-graph-paper" : "bg-white text-black"
         )}
       >
@@ -53,7 +54,7 @@ export const Canvas = () => {
             return (
               <div
                 key={block.i}
-                className="bg-white border border-transparent hover:border-blue-300 shadow-sm rounded transition-colors group overflow-hidden"
+                className="bg-white border border-transparent hover:border-blue-300 shadow-sm rounded transition-colors group overflow-visible"
               >
                 <BlockRenderer block={block} />
                 {/* Optional size indicator */}

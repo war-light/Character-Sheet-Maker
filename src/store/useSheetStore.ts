@@ -1,3 +1,4 @@
+import type { ThemeKey } from "@/lib/themes";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -6,7 +7,7 @@ import { persist } from "zustand/middleware";
 
 // Global settings
 export interface SheetStyle {
-  theme: "simple" | "gothic" | "cyberpunk";
+  theme: ThemeKey;
   fonts: {
     h1: string; // Ej: 'Cinzel'
     h2: string; // Ej: 'Roboto Slab'
@@ -41,6 +42,7 @@ interface SheetState {
   updateBlockData: (id: string, data: any) => void;
   updateLayout: (layout: any[]) => void;
   setGlobalFont: (tag: keyof SheetStyle["fonts"], fontName: string) => void;
+  setTheme: (theme: ThemeKey) => void;
   globalStyle: {
     theme: SheetStyle["theme"];
     fonts: { h1: string; h2: string; h3: string; body: string };
@@ -64,7 +66,7 @@ export const useSheetStore = create<SheetState>()(
         },
       ],
       globalStyle: {
-        theme: "simple",
+        theme: "simple", // Default
         fonts: { h1: "serif", h2: "serif", h3: "serif", body: "sans-serif" },
       },
 
@@ -77,6 +79,10 @@ export const useSheetStore = create<SheetState>()(
             ...state.globalStyle,
             fonts: { ...state.globalStyle.fonts, [tag]: fontName },
           },
+        })),
+      setTheme: (theme) =>
+        set((state) => ({
+          globalStyle: { ...state.globalStyle, theme },
         })),
       addBlock: (type, config = {}) =>
         set((state) => {
