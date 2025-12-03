@@ -34,6 +34,8 @@ export interface Block {
 }
 
 interface SheetState {
+  sheetName: string;
+  setSheetName: (name: string) => void;
   blocks: Block[];
   addBlock: (type: Block["type"], config?: Block["config"]) => void;
   isCompact: boolean;
@@ -69,7 +71,8 @@ export const useSheetStore = create<SheetState>()(
         theme: "simple", // Default
         fonts: { h1: "serif", h2: "serif", h3: "serif", body: "sans-serif" },
       },
-
+      sheetName: "Character Sheet",
+      setSheetName: (name: string) => set(() => ({ sheetName: name })),
       isCompact: false, // Start in false
 
       toggleCompact: () => set((state) => ({ isCompact: !state.isCompact })),

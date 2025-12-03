@@ -22,6 +22,12 @@ interface ThemeConfig {
       label: string;
       input: string;
     };
+    list: {
+      container: string;
+      row: string;
+      divider: string;
+      bullet: string;
+    };
     container: string;
     divider: string;
     shape: string;
@@ -51,6 +57,12 @@ export const THEMES: Record<ThemeKey, ThemeConfig> = {
         input:
           "bg-gray-50 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500",
       },
+      list: {
+        container: "bg-white border border-gray-300 rounded-md shadow-sm overflow-hidden",
+        row: "flex items-center gap-2 p-1.5 hover:bg-gray-50 transition-colors group/row",
+        divider: "border-b border-gray-100 last:border-0",
+        bullet: "text-gray-400 font-bold text-xs select-none",
+      },
       container: "border-2 border-dashed border-gray-200 bg-gray-50/50 rounded-lg",
       divider: "bg-gray-200 h-[1px]",
       shape: "bg-gray-100 border-2 border-gray-300",
@@ -78,6 +90,12 @@ export const THEMES: Record<ThemeKey, ThemeConfig> = {
         label: "font-serif font-bold text-sm text-amber-800 tracking-widest",
         input:
           "bg-transparent border-b-2 border-amber-900/30 rounded-none focus:border-amber-900 font-serif italic",
+      },
+      list: {
+        container: "bg-amber-50/50 border-2 border-amber-900/20 rounded-sm",
+        row: "flex items-center gap-2 p-1 hover:bg-amber-900/5 transition-colors group/row",
+        divider: "border-b border-amber-900/20 last:border-0",
+        bullet: "text-amber-800 font-serif text-sm",
       },
       container: "border-4 border-double border-amber-900/20 bg-amber-50/30 rounded-sm",
       divider: "bg-amber-900/40 h-[2px]",
@@ -111,6 +129,12 @@ export const THEMES: Record<ThemeKey, ThemeConfig> = {
         "border border-cyan-500 bg-cyan-900/5 rounded-none relative after:content-[''] after:absolute after:top-0 after:left-0 after:w-2 after:h-2 after:bg-cyan-500",
       divider: "bg-pink-500 h-[3px] shadow-[0_0_5px_rgba(236,72,153,0.5)]",
       shape: "bg-transparent border border-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.2)]",
+    },
+    list: {
+      container: "bg-black/40 border border-cyan-500/50 backdrop-blur-sm",
+      row: "flex items-center gap-2 p-1.5 hover:bg-cyan-500/10 transition-colors group/row",
+      divider: "border-b border-cyan-500/30 last:border-0",
+      bullet: "text-pink-500 text-[10px]",
     },
   },
 };

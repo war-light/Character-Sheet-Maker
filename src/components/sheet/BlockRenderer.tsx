@@ -1,9 +1,8 @@
-import { GripHorizontal, Plus, Trash2, X } from "lucide-react";
+import { GripHorizontal, MinusCircle, Plus, Trash2, X } from "lucide-react";
 import { THEMES } from "../../lib/themes";
 import { cn } from "../../lib/utils";
 import { useSheetStore, type Block } from "../../store/useSheetStore";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 
 export const BlockRenderer = ({ block }: { block: Block }) => {
   const { updateBlockData, removeBlock, globalStyle } = useSheetStore();
@@ -148,7 +147,7 @@ export const BlockRenderer = ({ block }: { block: Block }) => {
 
   // --- 6. LISTS ---
   if (block.type === "list") {
-    const items = (block.data?.items as string[]) || ["Elemento 1", "Elemento 2"];
+    const items = (block.data?.items as string[]) || ["Item 1", "Item 2"];
 
     const updateItem = (index: number, val: string) => {
       const newItems = [...items];
@@ -158,32 +157,78 @@ export const BlockRenderer = ({ block }: { block: Block }) => {
 
     const addItem = () => updateBlockData(block.i, { items: [...items, ""] });
 
+    const removeItem = (index: number) => {
+      const newItems = items.filter((_, i) => i !== index);
+      updateBlockData(block.i, { items: newItems });
+    };
+
+    // Handle Enter key to add new item automatically
+    const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        addItem();
+        // In a clearer implementation, we would set focus to the new input here
+      }
+      if (e.key === "Backspace" && items[index] === "" && items.length > 1) {
+        e.preventDefault();
+        removeItem(index);
+      }
+    };
     return (
-      <div className="w-full h-full group relative overflow-y-auto">
+      <div className="w-full h-full group relative flex flex-col">
         <DeleteBtn />
-        <ul className={cn("list-disc pl-5 space-y-1", currentTheme.colors.text)}>
+
+        {/* Container for the joined inputs */}
+        <div className={cn("flex flex-col w-full", currentTheme.blocks.list.container)}>
           {items.map((item, idx) => (
-            <li key={idx} className={cn("marker:opacity-50", currentTheme.colors.faint)}>
+            <div
+              key={idx}
+              className={cn(
+                currentTheme.blocks.list.row, // Row base style
+                currentTheme.blocks.list.divider // Divider between rows
+              )}
+            >
+              {/* Bullet / Number */}
+              <span className={cn("shrink-0 w-4 text-center", currentTheme.blocks.list.bullet)}>
+                {idx + 1}.
+              </span>
+
+              {/* Input Content */}
               <input
                 className={cn(
-                  "w-full bg-transparent border-none focus:outline-none text-sm nodrag border-b border-transparent focus:border-gray-200",
+                  "flex-1 bg-transparent border-none focus:outline-none text-sm nodrag min-w-0",
                   currentTheme.colors.text
                 )}
                 style={{ fontFamily: currentTheme.fonts.body }}
                 value={item}
                 onChange={(e) => updateItem(idx, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, idx)}
+                placeholder="..."
               />
-            </li>
+
+              {/* Individual delete button (visible on hover) */}
+              <button
+                onClick={() => removeItem(idx)}
+                className={cn(
+                  "nodrag opacity-0 group-hover/row:opacity-100 text-gray-400 hover:text-red-500 transition-opacity p-1",
+                  items.length <= 1 && "hidden" // Don't allow deleting the last item via this button
+                )}
+              >
+                <MinusCircle size={12} />
+              </button>
+            </div>
           ))}
-        </ul>
+        </div>
+
+        {/* Add Button (Bottom) */}
         <button
           onClick={addItem}
           className={cn(
-            "mt-2 text-xs flex items-center gap-1 nodrag hover:underline opacity-50 hover:opacity-100",
+            "mt-1 self-start text-[10px] flex items-center gap-1 nodrag px-2 py-1 rounded opacity-60 hover:opacity-100 transition-all",
             currentTheme.colors.accent
           )}
         >
-          <Plus size={10} /> Add item
+          <Plus size={10} /> Add Row
         </button>
       </div>
     );
@@ -241,7 +286,7 @@ export const BlockRenderer = ({ block }: { block: Block }) => {
         <textarea
           style={{ fontFamily: currentTheme.fonts.body }}
           className={cn(
-            "w-full h-full resize-none bg-transparent border-none focus:outline-none text-sm p-1 nodrag",
+            "w-full h-full resize-none bg-transparent border-none focus:outline-none text-sm p-1 nodrag overflow-clip",
             currentTheme.colors.text // Applies theme color
           )}
           placeholder="Write notes, story or descriptions here..."

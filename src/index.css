@@ -44,6 +44,10 @@
   }
 }
 
+input {
+  @apply overflow-visible
+}
+
 /* Force tailwind to use dark mode variable instead of system preference */
 @variant dark (&:where(.dark, .dark *));
 

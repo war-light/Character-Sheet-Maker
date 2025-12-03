@@ -1,13 +1,5 @@
-import {
-  ArrowLeft,
-  ChevronDown,
-  Download,
-  FileImage,
-  FileJson,
-  FileText,
-  Moon,
-  Sun,
-} from "lucide-react";
+import { ArrowLeft, ChevronDown, Download, FileImage, FileJson, FileText, Moon, Sun } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../../hooks/useTheme";
 import { downloadAsImage, downloadAsPDF } from "../../lib/exportUtils";
@@ -19,9 +11,18 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
+import { useSheetStore } from "@/store/useSheetStore";
 
 export const TopBar = () => {
   const { theme, toggleTheme } = useTheme();
+
+  const sheetName = useSheetStore((state) => state.sheetName);
+  const setSheetNameInStore = useSheetStore((state) => state.setSheetName);
+
+  const handleSheetNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value;
+    setSheetNameInStore(newName);
+  };
 
   return (
     <header className="h-14 border-b bg-white dark:bg-gray-950 px-4 flex items-center justify-between z-20 relative transition-colors">
@@ -40,7 +41,8 @@ export const TopBar = () => {
           {/* Invisible input for title */}
           <Input
             className="h-8 border-none shadow-none bg-transparent font-semibold text-lg hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-white transition-colors w-64 px-2"
-            defaultValue="Character Sheet"
+            value={sheetName}
+            onChange={handleSheetNameChange}
           />
         </div>
       </div>

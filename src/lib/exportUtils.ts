@@ -1,8 +1,11 @@
+import { useSheetStore } from "@/store/useSheetStore";
 import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
 
 export const downloadAsImage = async () => {
   const element = document.getElementById("rpg-sheet-canvas");
+  const sheetName = useSheetStore.getState().sheetName ?? "character-sheet";
+
   if (!element) return;
 
   try {
@@ -11,7 +14,7 @@ export const downloadAsImage = async () => {
 
     // 2. Temporal link and force download
     const link = document.createElement("a");
-    link.download = "my-character-sheet.png";
+    link.download = `${sheetName}.png`;
     link.href = dataUrl;
     link.click();
   } catch (err) {
@@ -21,6 +24,8 @@ export const downloadAsImage = async () => {
 
 export const downloadAsPDF = async () => {
   const element = document.getElementById("rpg-sheet-canvas");
+  const sheetName = useSheetStore.getState().sheetName ?? "character-sheet";
+
   if (!element) return;
 
   try {
@@ -37,7 +42,7 @@ export const downloadAsPDF = async () => {
 
     // 3. Add image to PDF
     pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("my-character-sheet.pdf");
+    pdf.save(`${sheetName}.pdf`);
   } catch (err) {
     console.error("Error exporting PDF:", err);
   }
